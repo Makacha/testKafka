@@ -4,12 +4,12 @@ import os
 
 from kafka import KafkaConsumer
 
-log_key = 'producer'
+log_key = 'consumer'
 logger = logging.getLogger(log_key)
 
 topic = 'stock'
 
-bootstrap_server = (os.getenv('BOOTSTRAP_SERVER_IP') if os.getenv('BOOTSTRAP_SERVER_IP') else 'localhost') + ':9092'
+bootstrap_server = (os.getenv('BOOTSTRAP_SERVER_IP') if os.getenv('BOOTSTRAP_SERVER_IP') else 'localhost:9092')
 logger.error("Kafka IP: " + bootstrap_server)
 
 consumer = KafkaConsumer(

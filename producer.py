@@ -21,21 +21,26 @@ def serializer(obj):
     return json.dumps(obj).encode('utf-8')
 
 
-producer = KafkaProducer(
-    bootstrap_servers=[bootstrap_server],
-    value_serializer=serializer
-)
-admin_client = admin.KafkaAdminClient(
-    bootstrap_servers="localhost:9092",
-    client_id='kafka-python-producer-1',
-)
-
-topic_list = [admin.NewTopic(name=topic, num_partitions=1, replication_factor=1)]
-
 try:
-    admin_client.create_topics(new_topics=topic_list, validate_only=False)
-except Exception as e:
-    logger.error("Topic is exited")
+
+    producer = KafkaProducer(
+        bootstrap_servers=[bootstrap_server],
+        value_serializer=serializer
+    )
+
+    try:
+        admin_client = admin.KafkaAdminClient(
+            bootstrap_servers=bootstrap_server,
+            client_id='kafka-python-producer-1',
+        )
+
+        topic_list = [admin.NewTopic(name=topic, num_partitions=1, replication_factor=1)]
+        admin_client.create_topics(new_topics=topic_list, validate_only=False)
+    except Exception as e:
+        logger.error("Can't create topic")
+
+except Exception:
+    logger.error("Can't connect to kafka")
 
 if __name__ == '__main__':
     while True:
